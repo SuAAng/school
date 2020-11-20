@@ -1,3 +1,4 @@
+//입력한 단어가 txt 파일에 존재하는지 알려주는 프로그램(배열 이용)
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.io.File;
