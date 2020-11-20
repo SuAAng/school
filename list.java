@@ -1,3 +1,5 @@
+//ì…ë ¥í•œ ë‹¨ì–´ê°€ txt íŒŒì¼ì— ì¡´ì¬í•˜ëŠ”ì§€ ì•Œë ¤ì£¼ëŠ” í”„ë¡œê·¸ë¨(ë¦¬ìŠ¤íŠ¸ ì´ìš©)
+
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.io.File;
@@ -18,7 +20,7 @@ class ListNode{
 }
 
 class LinkedList{
-	ListNode head = new ListNode(null);//Çìµå³ëµå
+	ListNode head = new ListNode(null);//í—¤ë“œë…¸ë“œ
 	
 	public ListNode create_node (String data) {
 		ListNode new_node = new ListNode(data);
@@ -27,30 +29,30 @@ class LinkedList{
 	}
 
 	public void insert_node (String data) {
-		ListNode temp_node = head;//ÀÓ½Ã·Î ¸¸µé¾î ÁÜ
+		ListNode temp_node = head;//ì„ì‹œë¡œ ë§Œë“¤ì–´ ì¤Œ
 		ListNode new_node = create_node(data);
-		if (head.data == null) {//¸®½ºÆ®¿¡ ¾Æ¹«°Íµµ ¾øÀ» ¶§
+		if (head.data == null) {//ë¦¬ìŠ¤íŠ¸ì— ì•„ë¬´ê²ƒë„ ì—†ì„ ë•Œ
 			head = new_node;
 		}
 		
 		else {
 			while (true) {
-				if (temp_node.data.compareTo(new_node.data) < 0) {//ÇöÀç ³ëµåº¸´Ù »õ ³ëµå°¡ Å©¸é ¿À¸¥ÂÊ ¸µÅ©·Î
+				if (temp_node.data.compareTo(new_node.data) < 0) {//í˜„ì¬ ë…¸ë“œë³´ë‹¤ ìƒˆ ë…¸ë“œê°€ í¬ë©´ ì˜¤ë¥¸ìª½ ë§í¬ë¡œ
 
 					if (temp_node.Rlink == null) {
 						temp_node.Rlink = new_node;
-						break; //»õ ³ëµå ¿¬°á ½ÃÄÑÁÖ°í ¹İº¹¹® ³ª¿È
+						break; //ìƒˆ ë…¸ë“œ ì—°ê²° ì‹œì¼œì£¼ê³  ë°˜ë³µë¬¸ ë‚˜ì˜´
 					}
 					temp_node = temp_node.Rlink;
 				}
-				else if (temp_node.data.compareTo(new_node.data) > 0) {//ÇöÀç ³ëµåº¸´Ù »õ ³ëµå°¡ Å©¸é ¿ŞÂÊ ¸µÅ©·Î
+				else if (temp_node.data.compareTo(new_node.data) > 0) {//í˜„ì¬ ë…¸ë“œë³´ë‹¤ ìƒˆ ë…¸ë“œê°€ í¬ë©´ ì™¼ìª½ ë§í¬ë¡œ
 					if (temp_node.Llink == null) {
 						temp_node.Llink = new_node;
-						break; //»õ ³ëµå ¿¬°á ½ÃÄÑÁÖ°í ¹İº¹¹® ³ª¿È
+						break; //ìƒˆ ë…¸ë“œ ì—°ê²° ì‹œì¼œì£¼ê³  ë°˜ë³µë¬¸ ë‚˜ì˜´
 					}
 					temp_node = temp_node.Llink;
 				}
-				else {//ÀÌ¹Ì ÀúÀåµÇ¾î ÀÖ´Ù¸é ÀúÀå ¾ÈÇÔ
+				else {//ì´ë¯¸ ì €ì¥ë˜ì–´ ìˆë‹¤ë©´ ì €ì¥ ì•ˆí•¨
 					break;
 				}
 			}
@@ -74,12 +76,12 @@ public class list {
 			
 		LinkedList link = new LinkedList();
 		
-		String [] s;//´Ü¾î ³ÖÀ» °ø°£
-		StringTokenizer tok = new StringTokenizer(word," \n");//ÅäÅ«
-		String search;//¼­Ä¡ÇÒ ´Ü¾î
+		String [] s;//ë‹¨ì–´ ë„£ì„ ê³µê°„
+		StringTokenizer tok = new StringTokenizer(word," \n");//í† í°
+		String search;//ì„œì¹˜í•  ë‹¨ì–´
 		int i = 0, k = 0;
 
-		int n = tok.countTokens();//token °³¼ö
+		int n = tok.countTokens();//token ê°œìˆ˜
 		
 		s = new String[n];
 		
@@ -87,30 +89,30 @@ public class list {
 			s[i]= tok.nextToken();
 		}
 
-		//¸®½ºÆ® ³Ö±â
-		link.insert_node (s[0]); //Æ®¸®ÀÇ ¸Ç À§¿¡ ³Ö¾îÁÜ.
+		//ë¦¬ìŠ¤íŠ¸ ë„£ê¸°
+		link.insert_node (s[0]); //íŠ¸ë¦¬ì˜ ë§¨ ìœ„ì— ë„£ì–´ì¤Œ.
 		
 		k = 1;
 		while (k < n) {
 			link.insert_node (s[k]);
 			k++;
 		}
-		//ÀúÀåµÈ ´Ü¾î Ã£±â
+		//ì €ì¥ëœ ë‹¨ì–´ ì°¾ê¸°
 		while(true){
-			ListNode nlist = link.head;//°Ë»öÇÒ ¶§ ¾²ÀÏ ÇöÀç ¸®½ºÆ®
-			System.out.print("°Ë»öÇÒ ´Ü¾î¸¦ ÀÔ·ÂÇÏ½Ã¿À(0ÀÔ·Â ½Ã Á¾·á)>> ");
+			ListNode nlist = link.head;//ê²€ìƒ‰í•  ë•Œ ì“°ì¼ í˜„ì¬ ë¦¬ìŠ¤íŠ¸
+			System.out.print("ê²€ìƒ‰í•  ë‹¨ì–´ë¥¼ ì…ë ¥í•˜ì‹œì˜¤(0ì…ë ¥ ì‹œ ì¢…ë£Œ)>> ");
 			search = scanner.next();
 			if(search.compareTo("0") == 0) {
-				System.out.print("Á¾·á");
+				System.out.print("ì¢…ë£Œ");
 				break;
 			}
 			while (true) {
 				if (nlist == null) {
-					System.out.println(search + "Àº/´Â ¹®¼­¿¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+					System.out.println(search + "ì€/ëŠ” ë¬¸ì„œì— ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 					break;
 				}
 				else if (nlist.data.compareTo(search) == 0) {
-					System.out.println(search + "Àº/´Â ¹®¼­¿¡ Á¸ÀçÇÕ´Ï´Ù.");
+					System.out.println(search + "ì€/ëŠ” ë¬¸ì„œì— ì¡´ì¬í•©ë‹ˆë‹¤.");
 					break;
 				}
 				else if (nlist.data.compareTo(search) < 0) {
