@@ -21,15 +21,15 @@ public class array {
 			}
 
 
-			String [] s;//´Ü¾î ³ÖÀ» °ø°£
+			String [] s;//ë‹¨ì–´ ë„£ì„ ê³µê°„
 			StringTokenizer tok = new StringTokenizer (word," \n");
-			String [] tree;//Æ®¸®±¸Á¶·Î ´Ü¾î ³ÖÀ½
-			String search;//¼­Ä¡ÇÒ ´Ü¾î
+			String [] tree;//íŠ¸ë¦¬êµ¬ì¡°ë¡œ ë‹¨ì–´ ë„£ìŒ
+			String search;//ì„œì¹˜í•  ë‹¨ì–´
 			int i = 0;
 			int k = 0;
-			int cmp;//2°³ ºñ±³
+			int cmp;//2ê°œ ë¹„êµ
 		
-			int n = tok.countTokens();//token °³¼ö
+			int n = tok.countTokens();//token ê°œìˆ˜
 			
 			s = new String[n];
 			tree = new String[1000000];
@@ -38,53 +38,53 @@ public class array {
 				s[i]= tok.nextToken();
 			}
 
-			//Æ®¸® ½ÃÀÛ
+			//íŠ¸ë¦¬ ì‹œì‘
 			k = 0; i = 1;
 			while (k < n) {
 
-				if (tree[i] == null) {//tree°¡ ºñ¿öÁ® ÀÖÀ¸¸é Ã¤¿ö³Ö±â
+				if (tree[i] == null) {//treeê°€ ë¹„ì›Œì ¸ ìˆìœ¼ë©´ ì±„ì›Œë„£ê¸°
 					tree[i] = s[k];
 					k++;
-					i = 1;//³Ö°í³ª¼­ ´Ù½Ã Æ®¸® 1ºÎÅÍ º¸±â	
+					i = 1;//ë„£ê³ ë‚˜ì„œ ë‹¤ì‹œ íŠ¸ë¦¬ 1ë¶€í„° ë³´ê¸°	
 				}
 				else {
 					cmp = tree[i].compareTo(s[k]);
-					if (cmp < 0)//s[k]°¡ ´õ µÚ¿¡ ÀÖÀ¸¸é
+					if (cmp < 0)//s[k]ê°€ ë” ë’¤ì— ìˆìœ¼ë©´
 					{
 						i = (i * 2) + 1;
 					
 					}
-					else if (cmp > 0) //s[k]°¡ ´õ ¾Õ¿¡ ÀÖÀ¸¸é
+					else if (cmp > 0) //s[k]ê°€ ë” ì•ì— ìˆìœ¼ë©´
 					{
 						i = i * 2;
 					
 					}
-					else//ÀÌ¹Ì ÀúÀåµÈ ´Ü¾îÀÏ ¶§
+					else//ì´ë¯¸ ì €ì¥ëœ ë‹¨ì–´ì¼ ë•Œ
 					{
-						i = 1;// ´Ù½Ã Æ®¸®1ºÎÅÍ º¸±â
+						i = 1;// ë‹¤ì‹œ íŠ¸ë¦¬1ë¶€í„° ë³´ê¸°
 						k++;
 					}
 				}	
 			}
 		
-			//¿©±â±îÁö ¿Ïº®
-			//Æ®¸®¿¡ ÀúÀåµÈ ´Ü¾î Ã£±â
+			
+			//íŠ¸ë¦¬ì— ì €ì¥ëœ ë‹¨ì–´ ì°¾ê¸°
 			System.out.println("dkssud");
 			while(true) {
-				System.out.print("°Ë»öÇÒ ´Ü¾î¸¦ ÀÔ·ÂÇÏ½Ã¿À(0ÀÔ·Â ½Ã Á¾·á)>> ");
+				System.out.print("ê²€ìƒ‰í•  ë‹¨ì–´ë¥¼ ì…ë ¥í•˜ì‹œì˜¤(0ì…ë ¥ ì‹œ ì¢…ë£Œ)>> ");
 				search = scanner.next();
 				if(search.compareTo("0") == 0) {
-					System.out.print("Á¾·á");
+					System.out.print("ì¢…ë£Œ");
 					break;
 				}	
 				i = 1;
 				while(true) {
 					if (tree[i] == null) {
-						System.out.println(search + "Àº/´Â ¹®¼­¿¡ Á¸ÀçÇÏÁö¾Ê½À´Ï´Ù.");
+						System.out.println(search + "ì€/ëŠ” ë¬¸ì„œì— ì¡´ì¬í•˜ì§€ì•ŠìŠµë‹ˆë‹¤.");
 						break;
 					}	
 					else if (tree[i].compareTo(search) == 0) {
-						System.out.println(search + "Àº/´Â ¹®¼­¿¡ Á¸ÀçÇÕ´Ï´Ù.");
+						System.out.println(search + "ì€/ëŠ” ë¬¸ì„œì— ì¡´ì¬í•©ë‹ˆë‹¤.");
 						break;
 					}
 					else if (tree[i].compareTo(search) < 0) {
