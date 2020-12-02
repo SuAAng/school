@@ -1,3 +1,5 @@
+//내가 만든거 아니고 참고!
+
 #include <opencv2/opencv.hpp>
 using namespace cv;
 using namespace std;
