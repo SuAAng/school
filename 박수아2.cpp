@@ -1,157 +1,56 @@
-//10.1.6절에서 sort_lines() 함수는 중복이 제거된 허프 누적 행렬에서 임계값보다 큰 누적값들을 선별한 후에 이 값들을 내림차순으로 정렬한다.
-//이 함수를 cv::sortIdx()함수를 사용하지 않고 직접 정렬 알고리즘으로 구현하시오(2가지 이상의 정렬 알고리즘을 구현하시오)
+//예제_10.4.1은 가로 방향으로 드래그한 비율만큼 영상을 왜곡시킨다. 
+//여기에 세로 방향으로 드래그할 때에도 왜곡을 하도록 morphing()함수의 소스를 수정하시오.
 
 #include <opencv2/opencv.hpp>
 using namespace cv;
 using namespace std;
 
-//원본
-void sort_lines(Mat lines, vector<Vec2f>& s_lines) {
-	Mat acc = lines.col(2), idx;
-	sortIdx(acc, idx, SORT_EVERY_COLUMN + SORT_DESCENDING);
+Point2f pt1, pt2;
+Mat image;
 
-	cout << "sortIdx 사용" << endl << idx << endl<<endl;
+void morphing()
+{
+	Mat dst(image.size(), image.type(), Scalar(0));
+	int width = image.cols;
+	int length = image.rows;
+	for (float y = 0; y < image.rows; y+=0.1f) {
+		for (float x = 0; x < image.cols; x += 0.1f) {
+			float ratio_x, ratio_y;
 
-	for (int i = 0; i < idx.rows; i++) {
-		int id = idx.at<int>(i);
-		float rho = lines.at<float>(id, 0);
-		float radian = lines.at<float>(id, 1);
-		s_lines.push_back(Vec2f(rho, radian));
+			if (x < pt1.x) ratio_x = x / pt1.x;
+			else ratio_x = (width - x) / (width - pt1.x);
 
-	}
-}
+			if (y < pt1.y)ratio_y = y / pt1.y;
+			else ratio_y = (length - y) / (length - pt1.y);
 
-//삽입정렬
-Mat insertion_sort(Mat acc) {
-	Mat acc_copy = acc.clone();
-	Mat idx(acc.size(), acc.type());
-	for (int i = 0; i < idx.rows; i++) {//index 지정
-		for (int j = 0; j < idx.cols; j++) {
-			idx.at<int>(i, j) = i;
+			float dx = ratio_x * (pt2.x - pt1.x);
+			float dy = ratio_y * (pt2.y - pt1.y);
+
+			dst.at<uchar>(y + dy, x + dx) = image.at <uchar>(y, x);
 		}
 	}
-	//acc같은 경우 열수가 1개지만 행렬의 개수 상관없이 만들기 위해 반복문 2개 사용
-	for (int i = 0; i < acc_copy.cols; i++) {//acc의 열의 개수만큼 반복문 돌림
-		for (int j = 1; j < acc_copy.rows; j++) {//acc의 행의 개수만큼 반복문 돌림
-			for (int a = j - 1; a >= 0; a--) {//a는 현재 값과 비교할 행
-				if (acc_copy.at<int>(a, i) >= acc_copy.at<int>(j, i)) {//현재 값이 비교하는 값보다 작거나 같을 때  비교하는 값과 현재값 사이의 값들의 위치를 바꿈
-					if (a + 1 == j) {
-						break;
-					}
-					else {
-						int change = acc_copy.at<int>(j, i);//값
-						int change_idx = idx.at<int>(j, i);//인덱스 값
-						for (int b = j - 1; b > a; b--) {//값이 큰 값 다음의 값부터 밀림.
-							acc_copy.at<int>(b + 1, i) = acc_copy.at<int>(b, i);
-							idx.at<int>(b + 1, i) = idx.at<int>(b, i);//index 변경.
-						}
-						acc_copy.at<int>(a + 1, i) = change;
-						idx.at<int>(a + 1, i) = change_idx;
-						break;
-					}
-				}
-				else if (a == 0 && acc_copy.at<int>(a, i) < acc_copy.at<int>(j, i)) {//자신의 위치부터 처음 위치까지 돌려봤을 때 자신의 값보다 큰 값이 없을 때
-					int change = acc_copy.at<int>(j, i);//값
-					int change_idx = idx.at<int>(j, i);//인덱스 값
-					for (int b = j - 1; b >= a; b--) {//첫 값부터 현재 위치까지 밀려서 저장됨 
-						acc_copy.at<int>(b + 1, i) = acc_copy.at<int>(b, i);
-						idx.at<int>(b + 1, i) = idx.at<int>(b, i);//index 변경.
-					}
-					acc_copy.at<int>(a, i) = change;
-					idx.at<int>(a, i) = change_idx;
-					break;
-				}
-			}
-		}
-	}
-	return idx;
+	dst.copyTo(image);
+	imshow("image", image);
 }
-//선택정렬
-Mat selection_sort(Mat acc) {
-	Mat acc_copy = acc.clone();
-	Mat idx(acc.size(), acc.type());
 
-	for (int i = 0; i < idx.rows; i++) {//index 지정
-		for (int j = 0; j < idx.cols; j++) {
-			idx.at<int>(i, j) = i;
-		}
-	}
-
-	//acc같은 경우 열수가 1개지만 행렬의 개수 상관없이 만들기 위해 반복문 2개 사용
-	for (int i = 0; i < acc_copy.cols; i++) {//acc의 열의 개수만큼 반복문 돌림
-		for (int j = 0; j < acc_copy.rows; j++) {//acc의 행의 개수만큼 반복문 돌림
-			int choice = acc_copy.at<int>(j, i);
-			int choice_idx = idx.at<int>(j, i);
-			int index = j;
-			for (int now = j; now < acc_copy.rows; now++) {
-				if (choice < acc_copy.at<int>(now, i)) {
-					choice = acc_copy.at<int>(now, i);
-					choice_idx = idx.at<int>(now, i);
-					index = now;
-				}
-			}
-			acc_copy.at<int>(index, i) = acc_copy.at<int>(j, i);
-			acc_copy.at<int>(j, i) = choice;
-			idx.at<int>(index, i) = idx.at<int>(j, i);
-			idx.at<int>(j, i) = choice_idx;
-		}
+void onMouse(int event, int x, int y, int flags, void* param) {
+	if (event == EVENT_LBUTTONDOWN) {
+		pt1 = Point2f(x, y);
 
 	}
-
-
-
-
-
-	return idx;
-}
-//삽입정렬
-void insertion_sort_lines(Mat lines, vector<Vec2f>& s_lines) {
-	Mat acc = lines.col(2), idx;
-
-	idx = insertion_sort(acc);
-
-	cout << "삽입정렬 사용" << endl << idx << endl<<endl;
-	for (int i = 0; i < idx.rows; i++) {
-		int id = idx.at<int>(i);
-		float rho = lines.at<float>(id, 0);
-		float radian = lines.at<float>(id, 1);
-		s_lines.push_back(Vec2f(rho, radian));
-
-	}
-}
-//선택정렬
-void selection_sort_lines(Mat lines, vector<Vec2f>& s_lines) {
-	Mat acc = lines.col(2), idx;
-
-	idx = selection_sort(acc);
-
-	cout << "선택정렬 사용" <<endl<< idx << endl<<endl;
-	for (int i = 0; i < idx.rows; i++) {
-		int id = idx.at<int>(i);
-		float rho = lines.at<float>(id, 0);
-		float radian = lines.at<float>(id, 1);
-		s_lines.push_back(Vec2f(rho, radian));
-
+	else if (event == EVENT_LBUTTONUP) {
+		pt2 = Point2f(x, y);
+		morphing();
 	}
 }
 
-int main() {
-	int data[] = {
-		13,26,35,12,32,
-		27,24,33,22,13,
-		24,53,25,17,455,
-		452,2,6,72,35,
-		19,20,42,51,15
-	};
+int main()
+{
+	image = imread("../image/warp_test.jpg", 0);
+	CV_Assert(image.data);
 
-	Mat lines(5,5, CV_32S, data);
-	vector<Vec2f> s_lines;
-
-	cout << "lines= " << endl<< lines << endl<<endl; //lines에 들어간 데이터
-
-	sort_lines(lines, s_lines);//sortIdx 함수 사용
-	insertion_sort_lines(lines, s_lines); //삽입정렬
-	selection_sort_lines(lines, s_lines); //선택정렬
-
-
+	imshow("image",image);
+	setMouseCallback("image", onMouse);
+	waitKey();
+	return 0;
 }
